@@ -1,0 +1,8 @@
+{
+  "esm": true,
+  "experimentalSpecifierResolution": "node",
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext"
+  }
+}

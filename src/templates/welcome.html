@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مرحباً بك في PathPoint</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 30px;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+            color: white;
+        }
+        
+        .logo {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tagline {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .welcome-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 30px;
+            text-align: center;
+            line-height: 1.8;
+        }
+        
+        .features {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+        
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .feature-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-left: 15px;
+        }
+        
+        .feature-text {
+            flex: 1;
+            font-size: 14px;
+            color: #555;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px auto;
+            display: block;
+            width: fit-content;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: #888;
+            font-size: 14px;
+        }
+        
+        .social-links {
+            margin: 20px 0;
+        }
+        
+        .social-link {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: #f0f0f0;
+            border-radius: 50%;
+            margin: 0 5px;
+            text-align: center;
+            line-height: 35px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 30px 0;
+        }
+        
+        .security-note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            font-size: 13px;
+            color: #856404;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .feature-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .feature-icon {
+                margin-left: 0;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">🚀 PathPoint</div>
+            <div class="tagline">منصتك الذكية للخدمات الرقمية</div>
+        </div>
+        
+        <!-- Content -->
+        <div class="content">
+            <h1 class="welcome-title">مرحباً بك يا {{username}}! 👋</h1>
+            
+            <p class="welcome-text">
+                يسعدنا انضمامك إلى عائلة PathPoint! لقد قمت بإنشاء حسابك بنجاح والآن يمكنك الاستمتاع بجميع مميزات منصتنا المتقدمة.
+            </p>
+            
+            <!-- Features -->
+            <div class="features">
+                <div class="feature-item">
+                    <div class="feature-icon">🔐</div>
+                    <div class="feature-text">
+                        <strong>أمان متقدم</strong><br>
+                        حسابك محمي بأحدث تقنيات التشفير والمصادقة الثنائية
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text">
+                        <strong>أداء سريع</strong><br>
+                        استمتع بتجربة استخدام سريعة وسلسة على جميع الأجهزة
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text">
+                        <strong>خدمات متكاملة</strong><br>
+                        كل ما تحتاجه في مكان واحد مع واجهة سهلة الاستخدام
+                    </div>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-text">
+                        <strong>متعدد المنصات</strong><br>
+                        وصول حسابك من أي جهاز وفي أي وقت
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Security Note -->
+            <div class="security-note">
+                <strong>⚠️ ملاحظة أمنية:</strong><br>
+                لم نقم أبداً بطلب معلومات حساسة عبر البريد الإلكتروني. احتفظ بكلمة المرور الخاصة بك آمنة ولا تشاركها مع أي شخص.
+            </div>
+            
+            <!-- CTA Button -->
+            <a href="{{appUrl}}" class="cta-button">
+                ابدأ استخدام PathPoint الآن 🚀
+            </a>
+            
+            <div class="divider"></div>
+            
+            <!-- Next Steps -->
+            <h3 style="color: #333; margin-bottom: 15px; text-align: center;">الخطوات التالية:</h3>
+            <ol style="color: #666; line-height: 1.8; padding-right: 20px;">
+                <li>قم بتأكيد بريدك الإلكتروني (إن لم يكن مؤكداً)</li>
+                <li>أكمل ملفك الشخصي بالمعلومات الأساسية</li>
+                <li>استكشف لوحة التحكم والمميزات المتاحة</li>
+                <li>ابدأ في استخدام خدماتنا المتميزة</li>
+            </ol>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>هل تحتاج مساعدة؟</p>
+            <div class="social-links">
+                <a href="#" class="social-link">📧</a>
+                <a href="#" class="social-link">💬</a>
+                <a href="#" class="social-link">📱</a>
+                <a href="#" class="social-link">🌐</a>
+            </div>
+            
+            <p style="margin-top: 20px; font-size: 12px;">
+                هذا البريد الإلكتروني تم إرساله تلقائياً. لا ترد على هذا البريد.
+            </p>
+            
+            <p style="margin-top: 10px; font-size: 12px;">
+                © 2024 PathPoint. جميع الحقوق محفوظة.<br>
+                <a href="#" style="color: #667eea; text-decoration: none;">سياسة الخصوصية</a> | 
+                <a href="#" style="color: #667eea; text-decoration: none;">شروط الاستخدام</a>
+            </p>
+        </div>
+    </div>
+</body>
+</html>
