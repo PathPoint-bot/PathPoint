@@ -62,6 +62,11 @@ app.use(passport.initialize());
 if (env.app.nodeEnv === "development") { // Dev node only
   app.use(morgan("dev"));
 }
+
+// Rate limiting
+app.use(globalLimiter);
+
+
 // ── Health Check ──────────────────────────────────────
 app.get("/api/health", (req, res) => {
   res.status(200).json({ success: true, message: "Server is running" });
@@ -73,14 +78,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, {
   customSiteTitle: "PathPoint API Documentation"
 }));
 
-// Rate limiting
-app.use(globalLimiter);
 
 // Routes
 import authRouter from "./modules/auth/auth.route.js";
 app.use("/api/auth", authLimiter, authRouter);
-
-
 
 
 // Not found route
