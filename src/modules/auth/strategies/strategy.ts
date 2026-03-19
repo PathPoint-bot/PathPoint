@@ -3,6 +3,7 @@ import { Strategy as FacebookStrategy } from "passport-facebook";
 import type { Strategy as StrategyType } from "passport";
 import {createAccount} from "../auth.service.js"
 import type { IUser , ITokenPayload} from "../auth.types.js"
+import ApiError from "../../../utils/ApiError.js";
 // strategy class for oauth2 providers (google, facebook)
 export class Strategy {
     protected clientID: string;
@@ -57,7 +58,11 @@ export class Strategy {
                 }, 
                 async (_req: any, _accessToken: any, _refreshToken: any, profile: any, done: any) => {
                     try {
-                        let user : IUser | null = await createAccount(profile.id, this.provider!, profile.emails[0].value, profile.displayName);
+                        if (!profile.emails || profile.emails.length === 0) {
+                            throw new ApiError("Please enable email sharing in Facebook settings to login", 400);
+                        }
+                        let user : IUser |
+                         null = await createAccount(profile.id, this.provider!, profile.emails[0].value, profile.displayName);
                         if (!user) {
                             return done(new Error('User not found'), null);
                         }
