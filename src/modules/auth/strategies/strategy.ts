@@ -33,7 +33,7 @@ export class Strategy {
                 async (_req: any, _accessToken: any, _refreshToken: any, profile: any, done: any) => {
                     try {
                         if (!profile.emails || profile.emails.length === 0) {
-                            throw new ApiError("Please enable email sharing in Facebook settings to login", 400);
+                            throw new ApiError("Please enable email sharing in Google settings to login", 400);
                         }
                         let user = await createAccount(profile.id, this.provider!, profile.emails[0].value, profile.displayName);
                         if (!user) {
