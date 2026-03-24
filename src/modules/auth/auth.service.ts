@@ -6,6 +6,7 @@ import {accessTokenConfig , refreshTokenConfig} from "../../config/jwt.js";
 import type { ITokenPayload , IUser , RegisterInput , LoginInput } from "./auth.types.js";
 import {env} from "../../config/env.js";
 import ApiError from "../../utils/ApiError.js";
+import crypto from "crypto";
 import ForgetPassword from "./models/forgetPassword.model.js";
 // Validate and sanitize user name
 const checkName = (name : string) => {
@@ -32,20 +33,36 @@ export async function createUser(name : string, email : string, password : strin
     return user
 }
 
-// Create or link OAuth account
-export const createAccount = async(providerId : string , provider : string , email : string , name : string) : Promise<IUser | null> => {
-    let account = await Account.findOne({providerId, provider})
-    let user : IUser | null = null
-    if (!account) {
-        user = await checkEmail(email)
-        // if user not found, create new user
-        if (!user) {
-            user = await createUser(name, email, "")
-        }
-        await Account.create({providerId, provider , userId: user._id})
-    }
+// Create new user without password (for OAuth)
+export async function createOAuthUser(name : string, email : string) {
+    name = checkName(name)
+    const securePassword = crypto.randomBytes(16).toString("hex");
+    const user = await User.create({name, email, password: securePassword})
     return user
 }
+
+// Create or link OAuth account
+export const createAccount = async(providerId : string , provider : string , email : string , name : string) : Promise<IUser> => {
+    let account = await Account.findOne({providerId, provider})
+    if (!account) {
+        let user = await checkEmail(email);
+        if (!user) {
+         user = await createOAuthUser(name, email);
+        }
+        await Account.create({ providerId, provider, userId: user._id });
+        return user;
+    }
+
+    const user = await User.findById(account.userId);
+
+    if (!user) {
+        throw new ApiError("User not found", 500);
+    }
+
+    return user;
+    };
+
+
 // Generate JWT Refresh Token (long-lived - 1 Hour)
 export function createAcessToken(payload : ITokenPayload) {
     return jwt.sign(payload, accessTokenConfig.secret, {expiresIn: accessTokenConfig.expiresIn})
