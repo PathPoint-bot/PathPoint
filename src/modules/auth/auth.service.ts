@@ -8,14 +8,16 @@ import {env} from "../../config/env.js";
 import ApiError from "../../utils/ApiError.js";
 import crypto from "crypto";
 import ForgetPassword from "./models/forgetPassword.model.js";
+import { USER, TIME, AUTH, USER_ERRORS, AUTH_ERRORS } from "../../constants/index.js";
+
 // Validate and sanitize user name
 const checkName = (name : string) => {
-    if (name.length < 3) {
-        for(let i = 0 ; i < (3 - name.length) ; i++) {
+    if (name.length < USER.NAME.MIN_LENGTH) {
+        for(let i = 0 ; i < (USER.NAME.MIN_LENGTH - name.length) ; i++) {
             name += `${i}`
         }
-    } else if(name.length > 25) {
-        name = name.slice(0,25)
+    } else if(name.length > USER.NAME.MAX_LENGTH) {
+        name = name.slice(0, USER.NAME.MAX_LENGTH)
     }
     return name
 }
@@ -58,7 +60,6 @@ export const createAccount = async(providerId : string , provider : string , ema
     if (!user) {
         throw new ApiError("User not found", 500);
     }
-
     return user;
     };
 
@@ -87,7 +88,7 @@ export const register = async (data : RegisterInput) => {
     // check if email exists
     const user = await checkEmail(email);
     if (user) {
-        throw ApiError.conflict("Email already exists");
+        throw ApiError.conflict(USER_ERRORS.EMAIL_EXISTS);
     }
 
     // hash password
@@ -106,13 +107,13 @@ export const login = async(data : LoginInput) => {
     // check if email exists
     const user = await checkEmail(email);
     if (!user) {
-        throw ApiError.notFound("User not found");
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
     }
     
     // check if password is correct
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-        throw ApiError.unauthorized("Invalid password");
+        throw ApiError.unauthorized(USER_ERRORS.INVALID_PASSWORD);
     }
     
     // generate tokens
@@ -146,7 +147,7 @@ export const resetPassword = async (email : string) => {
     // check if email exists
     const user = await checkEmail(email);
     if (!user) {
-        throw ApiError.notFound("User not found");
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
     }
     
     // generate 5-digit code
@@ -162,7 +163,7 @@ export const resetPassword = async (email : string) => {
     forgetPassword = await ForgetPassword.create({
         userId:user._id,
         resetPasswordToken : code,
-        resetPasswordExpire : Date.now() + 15 * 60 * 1000 // 15 minutes
+        resetPasswordExpire : Date.now() + TIME.FIFTEEN_MINUTES
     });
     if (!forgetPassword) {
         throw ApiError.serverError("Failed to create reset password token");
@@ -175,7 +176,7 @@ export const verifyResetPasswordCode = async (email : string, code : string) => 
     // check if email exists
     const user = await checkEmail(email);
     if (!user) {
-        throw ApiError.notFound("User not found");
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
     }
     let forgetPassword = await ForgetPassword.findOne({userId:user._id});
     if (!forgetPassword) {
@@ -184,7 +185,7 @@ export const verifyResetPasswordCode = async (email : string, code : string) => 
     // check if code is correct
     console.log(forgetPassword.resetPasswordToken , "," , code)
     if (forgetPassword.resetPasswordToken !== code) {
-        throw ApiError.unauthorized("Invalid code");
+        throw ApiError.unauthorized(AUTH_ERRORS.INVALID_CODE);
     }
     // check if code is expired
     if (!forgetPassword.resetPasswordExpire || forgetPassword.resetPasswordExpire < new Date()) {
@@ -193,7 +194,7 @@ export const verifyResetPasswordCode = async (email : string, code : string) => 
     // 6 digit code
     const newCode = Math.floor(100000 + Math.random() * 900000).toString();
     forgetPassword.verifyResetToken = newCode;
-    forgetPassword.verifyResetExpire = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    forgetPassword.verifyResetExpire = new Date(Date.now() + TIME.FIVE_MINUTES);
     await forgetPassword.save();
     return {user, newCode};
 }
@@ -204,7 +205,7 @@ export const updatePassword = async (email : string, code : string, password : s
     // check if email exists
     const user = await checkEmail(email);
     if (!user) {
-        throw ApiError.notFound("User not found");
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
     }
     let forgetPassword = await ForgetPassword.findOne({userId:user._id});
     if (!forgetPassword) {
@@ -216,7 +217,7 @@ export const updatePassword = async (email : string, code : string, password : s
     }
     // check if code is expired
     if (!forgetPassword.verifyResetExpire || forgetPassword.verifyResetExpire < new Date()) {
-        throw ApiError.unauthorized("Code expired");
+        throw ApiError.unauthorized(AUTH_ERRORS.CODE_EXPIRED);
     }
     let hashedPassword = await hashPassword(password);
     // update password

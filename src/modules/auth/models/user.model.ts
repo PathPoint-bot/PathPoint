@@ -1,7 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import validator from "validator";
 import type { IUser } from "../auth.types.js";
-
+import { USER, VALIDATION_ERRORS } from "../../../constants/index.js";
 
 
 
@@ -10,8 +10,8 @@ const userSchema = new Schema<IUser>({
         type: String,
         required:true,
         trim:true,
-        minlength:[3,"Name must be at least 3 characters"],
-        maxlength:[25,"Name must be at most 25 characters"]
+        minlength:[USER.NAME.MIN_LENGTH, VALIDATION_ERRORS.NAME_MIN],
+        maxlength:[USER.NAME.MAX_LENGTH, VALIDATION_ERRORS.NAME_MAX]
     },
     email:{
         type: String,
@@ -21,7 +21,7 @@ const userSchema = new Schema<IUser>({
         unique:true,
         validate:{
             validator:(v:string) => validator.isEmail(v),
-            message:"Please enter a valid email"
+            message: VALIDATION_ERRORS.EMAIL_INVALID
         }
     },
     password:{
@@ -32,11 +32,11 @@ const userSchema = new Schema<IUser>({
     },
     role:{
         type: String,
-        enum:["user","admin"],
-        default:"user"
+        enum:[USER.ROLES.USER, USER.ROLES.HR, USER.ROLES.ADMIN],
+        default:USER.ROLES.USER
     },
 
-    
+
 })
 
 const User = mongoose.model<IUser>("User", userSchema);
