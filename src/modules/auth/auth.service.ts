@@ -9,7 +9,8 @@ import ApiError from "../../utils/ApiError.js";
 import crypto from "crypto";
 import ForgetPassword from "./models/forgetPassword.model.js";
 import { USER, TIME, AUTH, USER_ERRORS, AUTH_ERRORS } from "../../constants/index.js";
-
+import { createProfile } from "../profile/profile.service.js";
+import {updateProfileHR} from "../profile/profile.service.js"
 // Validate and sanitize user name
 const checkName = (name : string) => {
     if (name.length < USER.NAME.MIN_LENGTH) {
@@ -32,6 +33,7 @@ export const checkEmail = async (email : string) => {
 export async function createUser(name : string, email : string, password : string) {
     name = checkName(name)
     const user = await User.create({name, email, password})
+    await createProfile(user._id.toString(), USER.ROLES.USER);
     return user
 }
 
@@ -40,6 +42,7 @@ export async function createOAuthUser(name : string, email : string) {
     name = checkName(name)
     const securePassword = crypto.randomBytes(16).toString("hex");
     const user = await User.create({name, email, password: securePassword})
+    await createProfile(user._id.toString(), USER.ROLES.USER);
     return user
 }
 
@@ -58,7 +61,7 @@ export const createAccount = async(providerId : string , provider : string , ema
     const user = await User.findById(account.userId);
 
     if (!user) {
-        throw new ApiError("User not found", 500);
+        throw new Error('User not found');
     }
     return user;
     };
@@ -226,3 +229,16 @@ export const updatePassword = async (email : string, code : string, password : s
     await forgetPassword.deleteOne();
     return {user};
 }   
+
+
+
+export const updateUserHR = async (userId: string) => {
+    const user = await User.findById(userId);
+    if (!user) {
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
+    }
+    user.role = "hr";
+    await user.save();
+    await updateProfileHR(user._id.toString());
+    return {user};
+}

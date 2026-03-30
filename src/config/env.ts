@@ -56,6 +56,14 @@ const envSchema = Joi.object({
     // Bcrypt
     BCRYPT_SALT_ROUNDS: Joi.number().required()
     .messages({"any.required":"Bcrypt salt rounds is required"}),
+
+    // Cloudinary
+    CLOUDINARY_CLOUD_NAME: Joi.string().required()
+    .messages({"any.required":"Cloudinary cloud name is required"}),
+    CLOUDINARY_API_KEY: Joi.string().required()
+    .messages({"any.required":"Cloudinary API key is required"}),
+    CLOUDINARY_API_SECRET: Joi.string().required()
+    .messages({"any.required":"Cloudinary API secret is required"}),
 }).unknown(true)
 
 
@@ -102,5 +110,10 @@ export const env = {
     },
     bcrypt:{
         saltRounds:value.BCRYPT_SALT_ROUNDS
+    },
+    cloudinary:{
+        cloudName:value.CLOUDINARY_CLOUD_NAME,
+        apiKey:value.CLOUDINARY_API_KEY,
+        apiSecret:value.CLOUDINARY_API_SECRET
     }
 }

@@ -37,13 +37,13 @@ export class Strategy {
                         }
                         let user = await createAccount(profile.id, this.provider!, profile.emails[0].value, profile.displayName);
                         if (!user) {
-                            return done(new Error('User not found'), null);
+                            return done(new Error('Failed to create User'), null);
                         }
                         let payload : ITokenPayload = {
                             userId: user._id.toString(),
                             role: user.role,
                             name: user.name,
-                            email: user.email
+                            email: user.email,
                         };
                         return done(null, payload);
                     } catch (error) {
@@ -67,7 +67,7 @@ export class Strategy {
                         let user : IUser |
                          null = await createAccount(profile.id, this.provider!, profile.emails[0].value, profile.displayName);
                         if (!user) {
-                            return done(new Error('User not found'), null);
+                            return done(new Error('Failed to create User'), null);
                         }
                         let payload : ITokenPayload = {
                             userId: user._id.toString(),

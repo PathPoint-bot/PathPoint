@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 
-export type role = "user" | "admin";
+export type role = "user" | "hr" | "admin";
 export type provider = "google" | "facebook" 
 
 
@@ -11,6 +11,7 @@ export interface IUser {
     email: string;
     password: string;
     role: role;
+    status: "pending" | "active";
     createdAt: Date;
     updatedAt: Date;
 }
@@ -29,8 +30,8 @@ export interface IAccount {
 export interface ITokenPayload {
     userId: string;
     role: role;
-    name: string
-    email:string
+    name: string;
+    email:string;
 }
 
 

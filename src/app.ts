@@ -12,6 +12,7 @@ import { globalErrorHandling } from "./middlewares/error.middleware.js"
 import ApiError from "./utils/ApiError.js"
 import { globalLimiter, authLimiter } from "./middlewares/ratelimiter.js"
 import { swaggerUi, specs } from "./docs/swagger.js"
+
 const app = express()
 
 
@@ -87,6 +88,24 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, {
 import authRouter from "./modules/auth/auth.route.js";
 app.use("/api/auth", authLimiter, authRouter);
 
+
+// Middleware
+import { isUser } from "./middlewares/isUser.middleware.js";
+app.use(isUser);
+
+
+
+import hrRouter from "./modules/hr/hr.route.js";
+app.use("/api/hr", hrRouter);
+
+import profileRouter from "./modules/profile/profile.route.js";
+app.use("/api/profile", profileRouter);
+
+import ratingRouter from "./modules/rating/rating.route.js";
+app.use("/api/rating", ratingRouter);
+
+import courseRouter from "./modules/course/course.route.js";
+app.use("/api/courses", courseRouter);
 
 // Not found route
 app.use((req : Request, res : Response, next : NextFunction) => {

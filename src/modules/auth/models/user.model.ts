@@ -35,7 +35,11 @@ const userSchema = new Schema<IUser>({
         enum:[USER.ROLES.USER, USER.ROLES.HR, USER.ROLES.ADMIN],
         default:USER.ROLES.USER
     },
-
+    status:{
+        type:String,
+        enum:["pending" , "active"],
+        default:"pending"
+    }
 
 })
 
