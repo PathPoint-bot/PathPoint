@@ -93,3 +93,19 @@ export const updatePassword = Joi.object({
         "string.max": VALIDATION_ERRORS.PASSWORD_MAX,
     })
 })
+
+
+
+
+
+
+// Validation for complete questions
+const questionItemSchema = Joi.object({
+    key: Joi.string().required(),
+    value: Joi.any().required(),
+});
+
+export const completeQuestionsValidation = Joi.object({
+    questions: Joi.array().items(questionItemSchema).required()
+        .messages({ "any.required": "Questions are required" }),
+});

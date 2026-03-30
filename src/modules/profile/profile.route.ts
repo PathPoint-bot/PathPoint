@@ -13,7 +13,6 @@ const router = express.Router();
 // Public routes
 router.get("/:userId", profileController.getProfileByUserId);
 
-
 // Protect all routes
 router.use(protectUser);
 
@@ -23,6 +22,5 @@ router.put("/user", upload.single("avatar"), validate(updateUserProfileValidatio
 router.use(protectHr);
 
 router.put("/hr", upload.fields([{ name: "avatar", maxCount: 1 }, { name: "resume", maxCount: 1 }]), validate(updateHRProfileValidation), profileController.updateMyHRProfile);
-
 
 export default router;

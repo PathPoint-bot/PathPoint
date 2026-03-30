@@ -97,3 +97,11 @@ export const updatePassword = asyncHandler(async (req: Request, res: Response, n
     await authService.updatePassword(email, code, password);
     res.status(200).json({success:true})
 })
+
+
+
+export const createQuestions = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { questions, token } = req.body;
+    await authService.createQuestions(questions, token);
+    res.status(200).json({success:true})
+})

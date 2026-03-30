@@ -21,7 +21,10 @@ export const isUser = async (req: Request, res: Response, next: NextFunction) =>
         if (!user) {
             return next(ApiError.unauthorized("User not found"));
         }
-        let payload = {
+        if (user.status === "pending") {
+            return next(ApiError.forbidden("Please Complete Your Profile"));
+        }
+        const payload = {
             userId: user._id.toString(),
             email: user.email,
             role: user.role,

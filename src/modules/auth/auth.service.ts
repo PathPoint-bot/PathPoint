@@ -11,6 +11,7 @@ import ForgetPassword from "./models/forgetPassword.model.js";
 import { USER, TIME, AUTH, USER_ERRORS, AUTH_ERRORS } from "../../constants/index.js";
 import { createProfile } from "../profile/profile.service.js";
 import {updateProfileHR} from "../profile/profile.service.js"
+import Questions from "./models/questions.model.js"
 // Validate and sanitize user name
 const checkName = (name : string) => {
     if (name.length < USER.NAME.MIN_LENGTH) {
@@ -242,3 +243,27 @@ export const updateUserHR = async (userId: string) => {
     await updateProfileHR(user._id.toString());
     return {user};
 }
+
+
+export const createQuestions = async (questions: any  , token : string) => {
+    let tokenData: ITokenPayload;
+    try {
+    tokenData = jwt.verify(token, process.env.JWT_SECRET as string) as ITokenPayload;
+    } catch (error) {
+        throw ApiError.unauthorized("Invalid token");
+    }
+    let user = await User.findById(tokenData.userId);
+    if (!user) {
+        throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
+    }
+    else if (user.status !== "pending") {
+        throw ApiError.badRequest("Profile already completed");
+    }
+    const question = await Questions.create(questions);
+    if (!question) {
+        throw ApiError.serverError("Failed to complete questions");
+    }
+}
+
+
+

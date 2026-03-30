@@ -54,3 +54,14 @@ export interface IResetPassword {
     verifyResetToken: string,
     verifyResetExpire : Date
 }
+
+
+export interface IQuestion {
+    userId: mongoose.Types.ObjectId;
+    questions: {
+    key: string;
+    value: any;
+    }[]
+    createdAt: Date;
+    updatedAt: Date;
+}

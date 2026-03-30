@@ -36,4 +36,6 @@ router.post("/reset-password", validate(resetPasswordValidation), resetPassword)
 router.post("/verify-reset-password-code", validate(verifyResetPasswordCodeValidation), verifyResetPasswordCode);
 router.post("/update-password", validate(updatePasswordValidation), updatePassword);
 
+
+
 export default router;

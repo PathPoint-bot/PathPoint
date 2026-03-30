@@ -52,3 +52,4 @@ export const updateHRProfileValidation = Joi.object({
     experience: Joi.array().items(experienceSchema).max(3),
     education: Joi.array().items(educationSchema).max(3),
 });
+

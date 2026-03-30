@@ -4,8 +4,7 @@ import { uploadToCloudinary, deleteFromCloudinary } from "../../utils/cloudinary
 import type { Request } from "express";
 import type mongoose from "mongoose";
 import type { ProfileType, UpdateUserProfileInput, UpdateHRProfileInput } from "./profile.types.js";
-import { mapProfileResponse } from "./profile.mapper.js";
-
+import { mapProfileResponse } from "./profile.mapper.js";;
 export const checkProfile = async (userId: string | mongoose.Types.ObjectId) => {
     const profile = await Profile.findOne({ userId });
     return profile;
@@ -185,16 +184,6 @@ export const updateProfileRating = async (userId: string | mongoose.Types.Object
         totalRatings: profile.totalRatings,
     };
 };
-
-
-
-
-
-
-
-
-
-
 
 
 
