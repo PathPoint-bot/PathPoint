@@ -108,4 +108,6 @@ const questionItemSchema = Joi.object({
 export const completeQuestionsValidation = Joi.object({
     questions: Joi.array().items(questionItemSchema).required()
         .messages({ "any.required": "Questions are required" }),
+    token: Joi.string().required()
+        .messages({ "string.required": "Token is required" }),
 });

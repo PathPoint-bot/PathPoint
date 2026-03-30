@@ -259,10 +259,13 @@ export const createQuestions = async (questions: any  , token : string) => {
     else if (user.status !== "pending") {
         throw ApiError.badRequest("Profile already completed");
     }
-    const question = await Questions.create(questions);
+    const question = await Questions.create({ userId: tokenData.userId, questions });
     if (!question) {
         throw ApiError.serverError("Failed to complete questions");
     }
+    user.status = "completed";
+    await user.save();
+    return {user};
 }
 
 

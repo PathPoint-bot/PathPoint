@@ -11,7 +11,7 @@ export interface IUser {
     email: string;
     password: string;
     role: role;
-    status: "pending" | "active";
+    status: "pending" | "completed";
     createdAt: Date;
     updatedAt: Date;
 }
