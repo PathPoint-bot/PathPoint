@@ -7,6 +7,64 @@
 
 /**
  * @swagger
+ * /profile:
+ *   get:
+ *     summary: Get all HR profiles
+ *     description: |
+ *       Retrieve all HR (Human Resources) profiles with filtering, sorting, and pagination.
+ *       This is a public endpoint that returns HR profiles with their company information.
+ *       
+ *       **Query Parameters:**
+ *       - `page`: Page number (default: 1)
+ *       - `limit`: Items per page (default: 10, max: 20)
+ *       - `sort`: Sort order (e.g., "-createdAt", "averageRating")
+ *       - `fields`: Select specific fields
+ *     tags: [Profile]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *           maximum: 20
+ *         description: Items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           default: "-createdAt"
+ *         description: Sort order (prefix with - for descending)
+ *     responses:
+ *       200:
+ *         description: List of HR profiles retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/HRProfile'
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+
+/**
+ * @swagger
  * /profile/{userId}:
  *   get:
  *     summary: Get user profile by ID

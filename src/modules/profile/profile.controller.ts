@@ -25,3 +25,10 @@ export const getProfileByUserId = asyncHandler(async (req: Request, res: Respons
     res.status(200).json({ success: true, data: profile });
 });
 
+
+
+
+export const getAllHrs = asyncHandler(async (req: Request, res: Response) => {
+    const profiles = await profileService.getAllHrs();
+    res.status(200).json({ success: true, data: profiles });
+});

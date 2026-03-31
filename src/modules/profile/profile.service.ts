@@ -1,5 +1,6 @@
 import Profile from "./profile.model.js";
 import ApiError from "../../utils/ApiError.js";
+import ApiFeatures from "../../utils/ApiFeatures.js";
 import { uploadToCloudinary, uploadRawToCloudinary, deleteFromCloudinary } from "../../utils/cloudinaryUpload.js";
 import type { Request } from "express";
 import type mongoose from "mongoose";
@@ -228,3 +229,14 @@ export const updateProfileRating = async (userId: string | mongoose.Types.Object
 
 
 
+
+
+export const getAllHrs = async () => {
+    let data = new ApiFeatures(Profile.find({ profileType: "hr" }), {} as any)
+        .filter()
+        .sort()
+        .limit()
+        .pagination();
+    const profiles = await data.query.select("-__v").populate("userId");
+    return profiles.map(mapProfileResponse);
+}
