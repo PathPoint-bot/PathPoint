@@ -78,10 +78,12 @@ app.get("/api/health", (req, res) => {
 });
 
 // ── Swagger Documentation ───────────────────────────────
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, {
-  customCss: '.swagger-ui .topbar { display: none }',
-  customSiteTitle: "PathPoint API Documentation"
-}));
+if (env.app.nodeEnv === "development") {
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs, {
+    customCss: '.swagger-ui .topbar { display: none }',
+    customSiteTitle: "PathPoint API Documentation"
+  }));
+}
 
 
 // Routes

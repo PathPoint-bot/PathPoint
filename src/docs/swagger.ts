@@ -12,6 +12,12 @@ const options = {
     },
     components: {
       securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+          description: 'JWT access token'
+        },
         cookieAuth: {
           type: 'apiKey',
           in: 'cookie',
@@ -139,15 +145,202 @@ const options = {
             }
           }
         },
-        ResetPasswordRequest: {
+        Resume: {
           type: 'object',
-          required: ['email'],
           properties: {
-            email: {
+            _id: {
               type: 'string',
-              format: 'email',
-              example: 'john@example.com',
-              description: 'User email address'
+              example: '507f1f77bcf86cd799439011'
+            },
+            userId: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            title: {
+              type: 'string',
+              example: 'My CV.pdf'
+            },
+            url: {
+              type: 'string',
+              format: 'uri',
+              example: 'https://res.cloudinary.com/.../resumes/abc123.pdf'
+            },
+            publicId: {
+              type: 'string',
+              example: 'resumes/abc123'
+            },
+            fileName: {
+              type: 'string',
+              example: 'My CV.pdf'
+            },
+            fileSize: {
+              type: 'number',
+              example: 1024567
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        Profile: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            userId: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            profileType: {
+              type: 'string',
+              enum: ['user', 'hr'],
+              example: 'user'
+            },
+            bio: {
+              type: 'string',
+              maxLength: 500,
+              example: 'Software developer with 5 years experience'
+            },
+            location: {
+              type: 'string',
+              example: 'Cairo, Egypt'
+            },
+            avatar: {
+              type: 'object',
+              properties: {
+                url: {
+                  type: 'string',
+                  format: 'uri'
+                },
+                publicId: {
+                  type: 'string'
+                }
+              }
+            },
+            social: {
+              type: 'object',
+              properties: {
+                youtube: { type: 'string' },
+                twitter: { type: 'string' },
+                facebook: { type: 'string' },
+                linkedin: { type: 'string' },
+                instagram: { type: 'string' },
+                github: { type: 'string' },
+                website: { type: 'string' }
+              }
+            },
+            isOwner: {
+              type: 'boolean',
+              description: 'True if the requesting user owns this profile'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
+            }
+          }
+        },
+        HRProfile: {
+          allOf: [
+            { $ref: '#/components/schemas/Profile' },
+            {
+              type: 'object',
+              properties: {
+                profileType: {
+                  type: 'string',
+                  enum: ['hr']
+                },
+                companyName: {
+                  type: 'string',
+                  example: 'Tech Corp'
+                },
+                companyWebsite: {
+                  type: 'string',
+                  format: 'uri'
+                },
+                companySize: {
+                  type: 'string',
+                  example: '50-200 employees'
+                },
+                industry: {
+                  type: 'string',
+                  example: 'Information Technology'
+                },
+                companyDescription: {
+                  type: 'string'
+                },
+                resume: {
+                  type: 'object',
+                  properties: {
+                    url: {
+                      type: 'string',
+                      format: 'uri'
+                    },
+                    publicId: {
+                      type: 'string'
+                    }
+                  }
+                },
+                averageRating: {
+                  type: 'number',
+                  example: 4.5
+                },
+                totalRatings: {
+                  type: 'number',
+                  example: 12
+                }
+              }
+            }
+          ]
+        },
+        Rating: {
+          type: 'object',
+          properties: {
+            _id: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            userId: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            targetType: {
+              type: 'string',
+              enum: ['hr', 'user', 'course'],
+              example: 'hr'
+            },
+            targetId: {
+              type: 'string',
+              example: '507f1f77bcf86cd799439011'
+            },
+            rating: {
+              type: 'number',
+              minimum: 1,
+              maximum: 5,
+              example: 4
+            },
+            comment: {
+              type: 'string',
+              maxLength: 500,
+              example: 'Great HR professional!'
+            },
+            createdAt: {
+              type: 'string',
+              format: 'date-time'
+            },
+            updatedAt: {
+              type: 'string',
+              format: 'date-time'
             }
           }
         },
