@@ -187,7 +187,6 @@ export const verifyResetPasswordCode = async (email : string, code : string) => 
         throw ApiError.notFound("Reset password token not found");
     }
     // check if code is correct
-    console.log(forgetPassword.resetPasswordToken , "," , code)
     if (forgetPassword.resetPasswordToken !== code) {
         throw ApiError.unauthorized(AUTH_ERRORS.INVALID_CODE);
     }
@@ -248,7 +247,7 @@ export const updateUserHR = async (userId: string) => {
 export const createQuestions = async (questions: any  , token : string) => {
     let tokenData: ITokenPayload;
     try {
-    tokenData = jwt.verify(token, process.env.JWT_SECRET as string) as ITokenPayload;
+    tokenData = jwt.verify(token, env.jwt.secret) as ITokenPayload;
     } catch (error) {
         throw ApiError.unauthorized("Invalid token");
     }
@@ -270,3 +269,16 @@ export const createQuestions = async (questions: any  , token : string) => {
 
 
 
+export const getQuestions = async (token : string) => {
+    let tokenData: ITokenPayload;
+    try {
+    tokenData = jwt.verify(token, env.jwt.secret) as ITokenPayload;
+    } catch (error) {
+        throw ApiError.unauthorized("Invalid token");
+    }
+    const question = await Questions.findOne({ userId: tokenData.userId });
+    if (!question) {
+        throw ApiError.notFound("Questions not found");
+    }
+    return {question};
+}

@@ -12,6 +12,7 @@ export interface IUser {
     password: string;
     role: role;
     status: "pending" | "completed";
+    plan: "free" | "basic" | "premium";
     createdAt: Date;
     updatedAt: Date;
 }

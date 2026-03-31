@@ -7,7 +7,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config({ path: join(__dirname, "../../.env") });
 
-console.log(process.env.MONGO_URI)
 const envSchema = Joi.object({
     // App
     PORT: Joi.number()

@@ -36,6 +36,7 @@ export const updateUserProfileValidation = Joi.object({
     location: Joi.string().allow(""),
     status: Joi.string().allow(""),
     jobTitles: Joi.array().items(Joi.string()).max(3),
+    removeAvatar: Joi.boolean(),
 });
 
 // Validation for HR Profile (company data)
@@ -51,5 +52,7 @@ export const updateHRProfileValidation = Joi.object({
     jobTitles: Joi.array().items(Joi.string()).max(3),
     experience: Joi.array().items(experienceSchema).max(3),
     education: Joi.array().items(educationSchema).max(3),
+    removeAvatar: Joi.boolean(),
+    removeResume: Joi.boolean(),
 });
 

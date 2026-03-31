@@ -1,10 +1,11 @@
 import Profile from "./profile.model.js";
 import ApiError from "../../utils/ApiError.js";
-import { uploadToCloudinary, deleteFromCloudinary } from "../../utils/cloudinaryUpload.js";
+import { uploadToCloudinary, uploadRawToCloudinary, deleteFromCloudinary } from "../../utils/cloudinaryUpload.js";
 import type { Request } from "express";
 import type mongoose from "mongoose";
 import type { ProfileType, UpdateUserProfileInput, UpdateHRProfileInput } from "./profile.types.js";
-import { mapProfileResponse } from "./profile.mapper.js";;
+import { mapProfileResponse } from "./profile.mapper.js";
+import { FILE_UPLOAD } from "../../constants/upload.js";
 export const checkProfile = async (userId: string | mongoose.Types.ObjectId) => {
     const profile = await Profile.findOne({ userId });
     return profile;
@@ -12,13 +13,13 @@ export const checkProfile = async (userId: string | mongoose.Types.ObjectId) => 
 
 const deleteOldAvatar = async (existingProfile: any): Promise<void> => {
     if (existingProfile?.avatar?.publicId) {
-        await deleteFromCloudinary(existingProfile.avatar.publicId);
+        await deleteFromCloudinary(existingProfile.avatar.publicId, FILE_UPLOAD.RESOURCE_TYPES.IMAGE);
     }
 };
 
 const deleteOldResume = async (existingProfile: any): Promise<void> => {
     if (existingProfile?.resume?.publicId) {
-        await deleteFromCloudinary(existingProfile.resume.publicId);
+        await deleteFromCloudinary(existingProfile.resume.publicId, FILE_UPLOAD.RESOURCE_TYPES.RAW);
     }
 };
 
@@ -54,7 +55,8 @@ export const createProfile = async (
 export const updateUserProfile = async (
     userId: string | mongoose.Types.ObjectId,
     updateData: UpdateUserProfileInput,
-    avatarFile?: Express.Multer.File
+    avatarFile?: Express.Multer.File,
+    removeAvatar?: boolean
 ) => {
     const existingProfile = await checkProfile(userId);
     if (!existingProfile) {
@@ -65,19 +67,30 @@ export const updateUserProfile = async (
         throw ApiError.badRequest("This is not a user profile");
     }
 
+    // Handle avatar removal
+    if (removeAvatar && existingProfile.avatar?.publicId) {
+        await deleteOldAvatar(existingProfile);
+    }
+
     // Delete old avatar if exists, then upload new one
     if (avatarFile) {
         await deleteOldAvatar(existingProfile);
-        const uploadResult = await uploadToCloudinary(avatarFile.buffer, "profiles/avatars");
+        const uploadResult = await uploadToCloudinary(avatarFile.buffer, FILE_UPLOAD.FOLDERS.PROFILE_AVATARS);
         updateData.avatar = {
             url: uploadResult.url,
             publicId: uploadResult.publicId,
         };
     }
 
+    // Prepare update operations
+    const updateOps: any = { $set: updateData };
+    if (removeAvatar) {
+        updateOps.$unset = { avatar: 1 };
+    }
+
     const profile = await Profile.findOneAndUpdate(
         { userId },
-        { $set: updateData },
+        updateOps,
         { new: true, runValidators: true }
     ).populate("userId", "name email role");
     if (!profile) {
@@ -90,7 +103,9 @@ export const updateHRProfile = async (
     userId: string | mongoose.Types.ObjectId,
     updateData: UpdateHRProfileInput,
     avatarFile?: Express.Multer.File,
-    resumeFile?: Express.Multer.File
+    resumeFile?: Express.Multer.File,
+    removeAvatar?: boolean,
+    removeResume?: boolean
 ) => {
     const existingProfile = await checkProfile(userId);
     if (!existingProfile) {
@@ -101,10 +116,20 @@ export const updateHRProfile = async (
         throw ApiError.badRequest("This is not an HR profile");
     }
 
+    // Handle avatar removal
+    if (removeAvatar && existingProfile.avatar?.publicId) {
+        await deleteOldAvatar(existingProfile);
+    }
+
+    // Handle resume removal
+    if (removeResume && existingProfile.resume?.publicId) {
+        await deleteOldResume(existingProfile);
+    }
+
     // Delete old avatar if exists, then upload new one
     if (avatarFile) {
         await deleteOldAvatar(existingProfile);
-        const uploadResult = await uploadToCloudinary(avatarFile.buffer, "profiles/avatars");
+        const uploadResult = await uploadToCloudinary(avatarFile.buffer, FILE_UPLOAD.FOLDERS.PROFILE_AVATARS);
         updateData.avatar = {
             url: uploadResult.url,
             publicId: uploadResult.publicId,
@@ -114,16 +139,31 @@ export const updateHRProfile = async (
     // Delete old resume if exists, then upload new one (HR only)
     if (resumeFile) {
         await deleteOldResume(existingProfile);
-        const uploadResult = await uploadToCloudinary(resumeFile.buffer, "profiles/resumes");
+        const uploadResult = await uploadRawToCloudinary(resumeFile.buffer, FILE_UPLOAD.FOLDERS.PROFILE_RESUMES, resumeFile.originalname);
         updateData.resume = {
             url: uploadResult.url,
             publicId: uploadResult.publicId,
         };
     }
 
+    // Prepare update operations
+    const updateOps: any = { $set: updateData };
+    const unsetOps: any = {};
+
+    if (removeAvatar) {
+        unsetOps.avatar = 1;
+    }
+    if (removeResume) {
+        unsetOps.resume = 1;
+    }
+
+    if (Object.keys(unsetOps).length > 0) {
+        updateOps.$unset = unsetOps;
+    }
+
     const profile = await Profile.findOneAndUpdate(
         { userId },
-        { $set: updateData },
+        updateOps,
         { new: true, runValidators: true }
     ).populate("userId", "name email role");
 
@@ -183,10 +223,4 @@ export const updateProfileRating = async (userId: string | mongoose.Types.Object
         averageRating: profile.averageRating,
         totalRatings: profile.totalRatings,
     };
-};
-
-
-
-
-
-
+}

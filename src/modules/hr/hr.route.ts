@@ -5,14 +5,12 @@ import { protectUser, protectHr , protectAdmin } from "../../middlewares/protect
 import validate from "../../middlewares/validate.js"
 const router = express.Router();
 
-
 // Protect all routes
 router.use(protectUser)
 
 router.get("/", hrController.getHRRequest)
 router.post("/", hrController.createHRRequest)
 router.delete("/", hrController.deleteHRRequest)
-
 
 // HR routes
 router.use(protectHr)
@@ -22,14 +20,5 @@ router.use(protectAdmin)
 
 router.put("/:id", validate(updateHRRequestValidation), hrController.updateHRRequest)
 router.get("/all", hrController.getAllHrRequests)
-
-
-
-
-
-
-
-
-
 
 export default router;

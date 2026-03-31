@@ -37,6 +37,7 @@ const profileSchema = new Schema<IProfile>({
         ref: "User",
         required: true,
         unique: true,
+        
     },
     profileType: {
         type: String,

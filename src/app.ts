@@ -107,9 +107,12 @@ app.use("/api/rating", ratingRouter);
 import courseRouter from "./modules/course/course.route.js";
 app.use("/api/courses", courseRouter);
 
+import resumeRouter from "./modules/resume/resume.route.js";
+app.use("/api/resumes", resumeRouter);
+
 // Not found route
 app.use((req : Request, res : Response, next : NextFunction) => {
-    next(new ApiError(`Can't find this route: ${req.originalUrl}`, 404));
+    next(ApiError.notFound(`Can't find this route: ${req.originalUrl}`));
 });
 
 // Global error handling middleware

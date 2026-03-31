@@ -1,12 +1,3 @@
-
-
-
-
-
-
-
-
-
 class ApiFeatures {
     query: any;
     queryString: any;

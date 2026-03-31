@@ -39,6 +39,11 @@ const userSchema = new Schema<IUser>({
         type:String,
         enum:["completed" , "active"],
         default:"pending"
+    },
+    plan:{
+        type: String,
+        enum:["free", "basic", "premium"],
+        default:"free"
     }
 
 })

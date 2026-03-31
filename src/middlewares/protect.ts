@@ -3,23 +3,13 @@ import ApiError from "../utils/ApiError.js";
 import { USER_ERRORS } from "../constants/errors.js";
 import { USER } from "../constants/user.js";
 
-
-
-
-
-
-
 // Check if user is authenticated
 export const protectUser = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.user)
     if (!req.user) {
         return next(ApiError.unauthorized(USER_ERRORS.UNAUTHORIZED));
     }
     next();
 }
-
-
-
 
 // Check if user is HR or Admin
 export const protectHr = async (req: Request, res: Response, next: NextFunction) => {
@@ -31,10 +21,6 @@ export const protectHr = async (req: Request, res: Response, next: NextFunction)
     }
     next();
 }
-
-
-
-
 
 // Check if user is Admin
 export const protectAdmin = async (req: Request, res: Response, next: NextFunction) => {

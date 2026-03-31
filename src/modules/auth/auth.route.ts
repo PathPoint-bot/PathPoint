@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "./strategies/passport.strategy.js";
-import { OAuthGoogle, OAuthFacebook, createQuestions, refresh, login, register, resetPassword, verifyResetPasswordCode, updatePassword } from "./auth.controller.js";
-import { createUserValidation,completeQuestionsValidation, loginValidation, refreshValidation, resetPassword as resetPasswordValidation, verifyResetPasswordCode as verifyResetPasswordCodeValidation, updatePassword as updatePasswordValidation } from "./auth.validation.js"
+import { OAuthGoogle, OAuthFacebook, createQuestions, refresh, login, getQuestions, register, resetPassword, verifyResetPasswordCode, updatePassword } from "./auth.controller.js";
+import { createUserValidation,completeQuestionsValidation, loginValidation, refreshValidation, resetPassword as resetPasswordValidation, verifyResetPasswordCode as verifyResetPasswordCodeValidation, updatePassword as updatePasswordValidation, getQuestionsValidation } from "./auth.validation.js"
 import validate from "../../middlewares/validate.js"
 
 const router = express.Router();
@@ -36,6 +36,6 @@ router.post("/reset-password", validate(resetPasswordValidation), resetPassword)
 router.post("/verify-reset-password-code", validate(verifyResetPasswordCodeValidation), verifyResetPasswordCode);
 router.post("/update-password", validate(updatePasswordValidation), updatePassword);
 router.post("/create-questions",validate(completeQuestionsValidation), createQuestions);
-
+router.get("/get-questions", validate(getQuestionsValidation), getQuestions);
 
 export default router;

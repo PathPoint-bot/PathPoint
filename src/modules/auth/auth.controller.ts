@@ -105,3 +105,10 @@ export const createQuestions = asyncHandler(async (req: Request, res: Response, 
     await authService.createQuestions(questions, token);
     res.status(200).json({success:true})
 })
+
+
+export const getQuestions = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { token } = req.body;
+    const questions = await authService.getQuestions(token);
+    res.status(200).json({questions})
+})

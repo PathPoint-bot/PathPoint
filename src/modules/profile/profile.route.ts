@@ -6,7 +6,7 @@ import {
 } from "./profile.validation.js";
 import { protectHr, protectUser } from "../../middlewares/protect.js";
 import validate from "../../middlewares/validate.js";
-import upload from "../../config/multer.js";
+import upload, { profileUpload } from "../../config/multer.js";
 
 const router = express.Router();
 
@@ -21,6 +21,6 @@ router.put("/user", upload.single("avatar"), validate(updateUserProfileValidatio
 
 router.use(protectHr);
 
-router.put("/hr", upload.fields([{ name: "avatar", maxCount: 1 }, { name: "resume", maxCount: 1 }]), validate(updateHRProfileValidation), profileController.updateMyHRProfile);
+router.put("/hr", profileUpload.fields([{ name: "avatar", maxCount: 1 }, { name: "resume", maxCount: 1 }]), validate(updateHRProfileValidation), profileController.updateMyHRProfile);
 
 export default router;

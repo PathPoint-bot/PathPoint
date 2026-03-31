@@ -111,3 +111,10 @@ export const completeQuestionsValidation = Joi.object({
     token: Joi.string().required()
         .messages({ "string.required": "Token is required" }),
 });
+
+
+
+export const getQuestionsValidation = Joi.object({
+    token: Joi.string().required()
+        .messages({ "string.required": "Token is required" }),
+});

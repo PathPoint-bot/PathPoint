@@ -38,3 +38,8 @@ export const RATE_LIMIT_ERRORS = {
 export const SERVER_ERRORS = {
     INTERNAL_ERROR: "Internal Server Error",
 } as const;
+
+export const RESUME_ERRORS = {
+    NOT_FOUND: "Resume not found",
+    UNAUTHORIZED: "You are not authorized to access this resume",
+} as const;
