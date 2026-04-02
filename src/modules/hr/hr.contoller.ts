@@ -60,3 +60,13 @@ export const getAllHrs = async (req: Request, res: Response, next: NextFunction)
         next(error);
     }
 }
+
+
+export const getHrBookings = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const hrBookings = await hrService.getHrBookings(req.user!.userId);
+        res.status(200).json({ success: true, data: hrBookings });
+    } catch (error) {
+        next(error);
+    }
+}

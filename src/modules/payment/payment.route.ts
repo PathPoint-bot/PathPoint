@@ -15,6 +15,15 @@ import {
 
 const router = Router();
 
+// Payment Callback (public - from Paymob)
+router.get(
+    "/callback",
+    validate(paymentCallbackValidation, "query"),
+    paymentCallback
+);
+
+
+
 // HR Booking Payment
 router.post(
     "/hr-booking",
@@ -33,11 +42,5 @@ router.post(
     initiatePlanUpgradePayment
 );
 
-// Payment Callback (public - from Paymob)
-router.get(
-    "/callback",
-    validate(paymentCallbackValidation, "query"),
-    paymentCallback
-);
 
 export default router;

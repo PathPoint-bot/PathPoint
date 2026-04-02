@@ -86,14 +86,13 @@ if (env.app.nodeEnv === "development") {
 }
 
 
-// Routes
-import authRouter from "./modules/auth/auth.route.js";
-app.use("/api/auth", authLimiter, authRouter);
-
-
 import paymentRouter from "./modules/payment/payment.route.js";
 app.use("/api/payments", paymentRouter);
 
+
+// Routes
+import authRouter from "./modules/auth/auth.route.js";
+app.use("/api/auth", authLimiter, authRouter);
 
 // Middleware
 import { isUser } from "./middlewares/isUser.middleware.js";

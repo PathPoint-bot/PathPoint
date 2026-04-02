@@ -103,3 +103,9 @@ export const createHrBooking = async (userId: string, hrId: string) => {
     }
     await HRBooking.create({ userId, hrId, status: "pending" });
 }
+
+
+export const getHrBookings = async (userId: string) => {
+    const hrBookings = await HRBooking.find({ hr: userId });
+    return hrBookings;
+}
