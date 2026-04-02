@@ -20,3 +20,11 @@ export interface IHRRequest {
 }
 
 
+
+export interface IHrBooking  {
+    userId : string;
+    hrId: string;
+    status: "pending" | "approved";
+    createdAt: Date;
+    updatedAt: Date;
+}

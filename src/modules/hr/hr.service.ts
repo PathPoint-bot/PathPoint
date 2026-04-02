@@ -1,11 +1,10 @@
-import HRRequest from "./hrRequest.model.js";
+import HRRequest from "./model/hrRequest.model.js";
 import ApiError from "../../utils/ApiError.js";
 import { updateUserHR } from "../auth/auth.service.js";
 import ApiFeatures from "../../utils/ApiFeatures.js";
 import type { Request } from "express";
 import type { HRRequestStatus } from "./hr.types.js";
-
-
+import HRBooking from "./model/hrBooking.model.js";
 
 
 function checkStatus(status: HRRequestStatus) {
@@ -93,4 +92,14 @@ export const getAllHrs = async (req: Request) => {
     features = features.filter().sort().limit().pagination();
     const hrRequests = await features.query;
     return hrRequests;
+}
+
+
+
+export const createHrBooking = async (userId: string, hrId: string) => {
+    const check = await HRBooking.findOne({ userId, hrId });
+    if (check) {
+        throw ApiError.badRequest("HR booking already exists");
+    }
+    await HRBooking.create({ userId, hrId, status: "pending" });
 }

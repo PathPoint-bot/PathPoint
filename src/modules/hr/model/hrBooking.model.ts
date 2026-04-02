@@ -1,12 +1,14 @@
 import mongoose, { Schema } from "mongoose";
-import type { IHRRequest } from "./hr.types.js";
+import type { IHrBooking } from "../hr.types.js";
 
-
-const hrRequestSchema = new Schema<IHRRequest>({
+const hrBookingSchema = new Schema<IHrBooking>({
     userId: {
         type: String,
         required: true,
-        unique: true,
+    },
+    hrId: {
+        type: String,
+        required: true,
     },
     status: {
         type: String,
@@ -18,6 +20,5 @@ const hrRequestSchema = new Schema<IHRRequest>({
     timestamps: true
 });
 
-
-const HRRequest = mongoose.model<IHRRequest>("HRRequest", hrRequestSchema);
-export default HRRequest;
+const HRBooking = mongoose.model<IHrBooking>("HRBooking", hrBookingSchema);
+export default HRBooking;

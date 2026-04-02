@@ -1,9 +1,9 @@
 import Rating from "./rating.model.js";
 import ApiError from "../../utils/ApiError.js";
 import type mongoose from "mongoose";
-import { updateProfileRating } from "../profile/profile.service.js";
+import { updateProfileRating  , checkProfile} from "../profile/profile.service.js";
 import type { CreateRatingInput, UpdateRatingInput, RatingTargetType } from "./rating.types.js";
-
+import {getCourseById} from "../course/course.service.js";
 // Create new rating
 export const createRating = async (
     raterId: string | mongoose.Types.ObjectId,
@@ -21,7 +21,19 @@ export const createRating = async (
     if (existingRating) {
         throw ApiError.conflict("You have already rated this item. Use update instead.");
     }
-
+    
+    // Check if target exists
+    if (targetType === "course") {
+        await getCourseById(targetId);
+    }
+    else if(targetType === "profile") {
+        let targetProfile = await checkProfile(targetId);
+        if (!targetProfile) {
+            throw ApiError.notFound("Profile not found");
+        } else if(targetProfile.profileType != "hr") {
+            throw ApiError.badRequest("Only HR profiles can be rated");
+        }
+    }
     const newRating = await Rating.create({
         raterId,
         targetId,

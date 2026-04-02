@@ -5,8 +5,8 @@ import crypto from "crypto";
 import ApiError from "../../utils/ApiError.js";
 import { PaymentLog } from "./payment.model.js";
 import { PAYMENT_AMOUNTS, PAYMENT_CURRENCY } from "../../constants/payment.js";
-import {updateUserHR, upgradeUserPlan} from "../auth/auth.service.js";
-
+import {upgradeUserPlan} from "../auth/auth.service.js";
+import {createHrBooking} from "../hr/hr.service.js";
 let cacheToken: string | null = null;
 
 // HMAC Validation for Paymob callback (handles query params format)
@@ -161,7 +161,8 @@ export const initiateHRBookingPayment = async (
         provider: "paymob",
         metadata: {
              service: "hr-booking",
-             hrId
+             hrId,
+             userId: user.userId
             }
     });
     
@@ -245,7 +246,7 @@ export const paymentCallBack = async (data: any, hmac: string): Promise<{ succes
         );
         // Execute service-specific action based on stored metadata
         if (originalMetadata?.service === "hr-booking") {
-            await updateUserHR(originalMetadata?.hrId);
+            await createHrBooking(originalMetadata?.hrId, originalMetadata?.userId);
         } else if (originalMetadata?.service === "plan-upgrade") {
             await upgradeUserPlan(updatedLog.userId, originalMetadata?.plan);
         }

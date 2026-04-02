@@ -32,7 +32,15 @@ A comprehensive career platform API built with Node.js, Express, TypeScript, and
 - **Update & Delete Ratings** - Modify or remove existing ratings
 - **View Own Ratings** - Users can see their rating history
 
-### 📚 Course Management
+### � Payment Integration
+- **Paymob Integration** - Secure payment processing with Paymob
+- **HR Booking Payments** - Fixed 100 EGP for booking HR sessions
+- **Plan Upgrade Payments** - Tiered pricing (Basic: 200 EGP, Pro: 500 EGP, Enterprise: 1000 EGP)
+- **HMAC Validation** - Secure callback verification
+- **Automatic Actions** - Upgrade user roles on successful payment
+- **Payment Logging** - Complete transaction history in database
+
+### � Course Management
 - **Course Listings** - Browse available courses
 - **Admin CRUD** - Create, update, delete courses (admin only)
 - **Public Access** - Anyone can view course listings
@@ -63,6 +71,7 @@ A comprehensive career platform API built with Node.js, Express, TypeScript, and
 - **Documentation**: Swagger/OpenAPI 3.0
 - **Security**: Helmet, CORS, Rate Limiting, bcrypt
 - **Email**: Nodemailer with Gmail SMTP
+- **Payments**: Paymob (Paymob API)
 
 ## 📦 Installation
 
@@ -124,6 +133,14 @@ EMAIL_PASSWORD=your-gmail-app-password
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
+
+# Paymob
+PAYMOB_API_KEY=your-paymob-api-key
+PAYMOB_SECRET_KEY=your-paymob-secret-key
+PAYMOB_HMAC_SECRET=your-paymob-hmac-secret
+PAYMOB_INTEGRATION_ID=your-integration-id
+PAYMOB_IFRAME_ID=your-iframe-id
+PAYMOB_URL=https://accept.paymob.com
 ```
 
 ### OAuth Setup
@@ -150,6 +167,14 @@ CLOUDINARY_API_SECRET=your-api-secret
 1. Create account at [Cloudinary](https://cloudinary.com)
 2. Get your cloud name, API key, and API secret from the dashboard
 3. Add them to your `.env` file
+
+#### Paymob Setup
+1. Create account at [Paymob](https://paymob.com)
+2. Get your API key, Secret Key, and HMAC Secret from the dashboard
+3. Create an Integration ID (Card Payment)
+4. Get your Iframe ID from the Accept dashboard
+5. Add them to your `.env` file
+6. Set your callback URL in Paymob dashboard: `https://your-api.com/api/payments/callback`
 
 ## 🚀 Running the Application
 
@@ -232,6 +257,21 @@ DELETE /api/rating/:id           # Delete rating
 GET    /api/rating/my-rating     # Get user's ratings
 ```
 
+### Payment Endpoints
+
+```http
+POST   /api/payments/hr-booking      # Initiate HR booking payment (100 EGP)
+POST   /api/payments/plan-upgrade    # Initiate plan upgrade payment
+GET    /api/payments/callback        # Paymob callback (GET)
+POST   /api/payments/callback        # Paymob callback (POST)
+```
+
+**Payment Amounts (from constants):**
+- HR Booking: 100 EGP
+- Plan Basic: 200 EGP
+- Plan Pro: 500 EGP
+- Plan Enterprise: 1000 EGP
+
 ### Course Endpoints
 
 ```http
@@ -308,13 +348,16 @@ src/
 │   ├── multer.ts           # File upload configuration
 │   └── passport.ts         # Passport strategies
 ├── constants/
-│   └── upload.ts           # Upload constants (limits, MIME types)
+│   ├── upload.ts           # Upload constants (limits, MIME types)
+│   └── payment.ts          # Payment amounts and currency
 ├── docs/
 │   ├── swagger.ts          # Swagger configuration
 │   ├── auth.apis.ts        # Auth API docs
 │   ├── profile.apis.ts     # Profile API docs
 │   ├── resume.apis.ts      # Resume API docs
-│   └── rating.apis.ts      # Rating API docs
+│   ├── rating.apis.ts      # Rating API docs
+│   ├── payment.apis.ts     # Payment API docs
+│   └── hr.apis.ts          # HR API docs
 ├── middlewares/
 │   ├── error.middleware.ts # Error handling
 │   ├── protect.ts          # Auth protection (user/HR/admin)
@@ -349,10 +392,16 @@ src/
 │   │   ├── course.model.ts
 │   │   ├── course.controller.ts
 │   │   └── course.route.ts
-│   └── hr/                 # HR request module
-│       ├── hr.model.ts
-│       ├── hr.controller.ts
-│       └── hr.route.ts
+│   ├── hr/                 # HR request module
+│   │   ├── hr.model.ts
+│   │   ├── hr.controller.ts
+│   │   └── hr.route.ts
+│   └── payment/            # Payment module
+│       ├── payment.model.ts
+│       ├── payment.controller.ts
+│       ├── payment.service.ts
+│       ├── payment.route.ts
+│       └── payment.validation.ts
 ├── services/
 │   └── email.ts            # Email service
 ├── utils/
