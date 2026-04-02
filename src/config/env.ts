@@ -63,6 +63,22 @@ const envSchema = Joi.object({
     .messages({"any.required":"Cloudinary API key is required"}),
     CLOUDINARY_API_SECRET: Joi.string().required()
     .messages({"any.required":"Cloudinary API secret is required"}),
+
+    // Payment
+    PAYMOB_API_KEY: Joi.string().required()
+    .messages({"any.required":"Paymob API key is required"}),
+    PAYMOB_SECERT_KEY: Joi.string().required()
+    .messages({"any.required":"Paymob secert key is required"}),
+    PAYMOB_PUBLIC_KEY: Joi.string().required()
+    .messages({"any.required":"Paymob public key is required"}),
+    PAYMOB_URL: Joi.string().required()
+    .messages({"any.required":"Paymob url is required"}),
+    INTEGRATION_ID: Joi.string().required()
+    .messages({"any.required":"Integration id is required"}),
+    IFRAME_ID: Joi.string().required()
+    .messages({"any.required":"Iframe id is required"}),
+    PAYMOB_HMAC: Joi.string().required()
+    .messages({"any.required":"Paymob HMAC is required"}),
 }).unknown(true)
 
 
@@ -114,5 +130,14 @@ export const env = {
         cloudName:value.CLOUDINARY_CLOUD_NAME,
         apiKey:value.CLOUDINARY_API_KEY,
         apiSecret:value.CLOUDINARY_API_SECRET
+    },
+    payment:{
+        paymobApiKey:value.PAYMOB_API_KEY,
+        paymobSecertKey:value.PAYMOB_SECERT_KEY,
+        paymobPublicKey:value.PAYMOB_PUBLIC_KEY,
+        paymobUrl:value.PAYMOB_URL,
+        integrationId:value.INTEGRATION_ID,
+        iframeId:value.IFRAME_ID,
+        hmac:value.PAYMOB_HMAC
     }
 }

@@ -238,8 +238,10 @@ export const updateUserHR = async (userId: string) => {
         throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
     }
     user.role = "hr";
-    await user.save();
-    await updateProfileHR(user._id.toString());
+    await Promise.all([
+        user.save(),
+        updateProfileHR(user._id.toString())
+    ]);
     return {user};
 }
 
@@ -281,4 +283,14 @@ export const getQuestions = async (token : string) => {
         throw ApiError.notFound("Questions not found");
     }
     return {question};
+}
+
+
+
+export const upgradeUserPlan = async (userId: string , plan : string) => {
+   const user = await User.findByIdAndUpdate(userId, { plan }, { new: true  , runValidators: true });
+   if (!user) {
+    throw ApiError.notFound(USER_ERRORS.NOT_FOUND);
+   }
+    return {user};
 }

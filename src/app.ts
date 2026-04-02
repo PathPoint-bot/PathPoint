@@ -91,6 +91,10 @@ import authRouter from "./modules/auth/auth.route.js";
 app.use("/api/auth", authLimiter, authRouter);
 
 
+import paymentRouter from "./modules/payment/payment.route.js";
+app.use("/api/payments", paymentRouter);
+
+
 // Middleware
 import { isUser } from "./middlewares/isUser.middleware.js";
 app.use(isUser);
@@ -111,6 +115,7 @@ app.use("/api/courses", courseRouter);
 
 import resumeRouter from "./modules/resume/resume.route.js";
 app.use("/api/resumes", resumeRouter);
+
 
 // Not found route
 app.use((req : Request, res : Response, next : NextFunction) => {

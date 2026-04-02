@@ -1,19 +1,46 @@
 # PathPoint API
 
-A robust and secure authentication API built with Node.js, Express, TypeScript, and MongoDB.
+A comprehensive career platform API built with Node.js, Express, TypeScript, and MongoDB. PathPoint connects job seekers with HR professionals, offering resume management, profile customization, ratings, and course listings.
 
 ## 🚀 Features
 
-### 🔐 Authentication
-- **Local Registration & Login** - Email/password based authentication
+### 🔐 Authentication & Authorization
+- **Local Registration & Login** - Email/password based authentication with JWT
 - **OAuth Integration** - Google & Facebook OAuth2 support
 - **JWT Tokens** - Access tokens (15 mins) + Refresh tokens (7 days)
 - **Cookie-based Auth** - HTTP-only, secure refresh token storage
-- **Password Reset** - Secure email-based password recovery
+- **Password Reset** - Secure email-based password recovery with verification codes
+- **Role-based Access** - User, HR, and Admin roles with protected routes
+
+### 👤 Profile Management
+- **User Profiles** - Bio, location, social links, job titles, avatar upload
+- **HR Profiles** - Company information, resume/CV, experience, education
+- **Avatar Upload** - Cloudinary integration (JPEG, PNG, JPG, WEBP)
+- **Resume Upload** - For HR professionals (PDF, DOC, DOCX)
+- **Public Profile Viewing** - Access any user's public profile
+
+### 📄 Resume/CV Management
+- **Upload CVs** - Support for PDF, DOC, DOCX formats
+- **Plan-based Limits** - Daily upload limits based on subscription tier
+- **Cloud Storage** - Cloudinary integration for file storage
+- **CRUD Operations** - Create, read, update, delete resumes
+- **Pagination & Sorting** - Query parameters for efficient data retrieval
+
+### ⭐ Rating System
+- **Rate HR Professionals** - Users can rate and review HR profiles
+- **Average Rating Calculation** - Automatic rating aggregation
+- **Update & Delete Ratings** - Modify or remove existing ratings
+- **View Own Ratings** - Users can see their rating history
+
+### 📚 Course Management
+- **Course Listings** - Browse available courses
+- **Admin CRUD** - Create, update, delete courses (admin only)
+- **Public Access** - Anyone can view course listings
 
 ### 🛡️ Security
 - **Rate Limiting** - Global and authentication-specific limits
-- **Input Validation** - Joi schema validation
+- **Input Validation** - Joi schema validation for all inputs
+- **File Upload Security** - Strict MIME type checking and size limits
 - **Password Hashing** - bcrypt with configurable salt rounds
 - **CORS Protection** - Configured for frontend integration
 - **Security Headers** - Helmet.js for enhanced security
@@ -26,14 +53,15 @@ A robust and secure authentication API built with Node.js, Express, TypeScript, 
 
 ## 🛠️ Tech Stack
 
-- **Runtime**: Node.js
+- **Runtime**: Node.js (v18+)
 - **Framework**: Express.js
 - **Language**: TypeScript
-- **Database**: MongoDB with Mongoose
-- **Authentication**: Passport.js + JWT
+- **Database**: MongoDB with Mongoose ODM
+- **Authentication**: Passport.js + JWT + Cookies
 - **Validation**: Joi
-- **Documentation**: Swagger/OpenAPI
-- **Security**: Helmet, CORS, Rate Limiting
+- **File Upload**: Multer + Cloudinary
+- **Documentation**: Swagger/OpenAPI 3.0
+- **Security**: Helmet, CORS, Rate Limiting, bcrypt
 - **Email**: Nodemailer with Gmail SMTP
 
 ## 📦 Installation
@@ -42,6 +70,7 @@ A robust and secure authentication API built with Node.js, Express, TypeScript, 
 - Node.js (v18+)
 - MongoDB (local or Atlas)
 - Gmail account (for email features)
+- Cloudinary account (for file uploads)
 
 ### Setup
 
@@ -91,8 +120,10 @@ REFRESH_TOKEN_SECRET=your-refresh-token-secret
 EMAIL_USER=your-gmail@gmail.com
 EMAIL_PASSWORD=your-gmail-app-password
 
-# Security
-BCRYPT_SALT_ROUNDS=12
+# Cloudinary
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
 
 ### OAuth Setup
@@ -114,6 +145,11 @@ BCRYPT_SALT_ROUNDS=12
 1. Enable 2-Step Verification on your Gmail account
 2. Generate App Password
 3. Use App Password in `EMAIL_PASSWORD` environment variable
+
+#### Cloudinary Setup
+1. Create account at [Cloudinary](https://cloudinary.com)
+2. Get your cloud name, API key, and API secret from the dashboard
+3. Add them to your `.env` file
 
 ## 🚀 Running the Application
 
@@ -142,24 +178,68 @@ Visit `http://localhost:3000/api-docs` for interactive API documentation.
 
 #### Local Auth
 ```http
-POST /api/auth/register
-POST /api/auth/login
-POST /api/auth/refresh
+POST /api/auth/register       # Register new user
+POST /api/auth/login          # Login with email/password
+POST /api/auth/refresh        # Get new access token
+POST /api/auth/logout         # Logout user
 ```
 
 #### OAuth
 ```http
-GET /api/auth/google
-GET /api/auth/facebook
-GET /api/auth/google/callback
-GET /api/auth/facebook/callback
+GET /api/auth/google          # Initiate Google OAuth
+GET /api/auth/facebook        # Initiate Facebook OAuth
+GET /api/auth/google/callback # Google OAuth callback
+GET /api/auth/facebook/callback # Facebook OAuth callback
 ```
 
 #### Password Reset
 ```http
-POST /api/auth/reset-password
-POST /api/auth/verify-reset-password-code
-POST /api/auth/update-password
+POST /api/auth/reset-password              # Request password reset
+POST /api/auth/verify-reset-password-code # Verify reset code
+POST /api/auth/update-password           # Update password with token
+```
+
+### Profile Endpoints
+
+```http
+GET    /api/profile              # Get all HR profiles (public)
+GET    /api/profile/:userId      # Get specific profile by user ID
+PUT    /api/profile/user         # Update user profile (auth required)
+PUT    /api/profile/hr           # Update HR profile (HR role required)
+```
+
+### Resume Endpoints
+
+```http
+GET    /api/resumes              # Get all user resumes
+POST   /api/resumes              # Upload new resume
+GET    /api/resumes/:id          # Get specific resume
+PATCH  /api/resumes/:id          # Update resume
+DELETE /api/resumes/:id          # Delete resume
+```
+
+**Plan Limits:**
+- Free: 1 resume daily
+- Basic: 3 resumes daily
+- Premium: 10 resumes daily
+
+### Rating Endpoints
+
+```http
+POST   /api/rating               # Create rating for HR
+PUT    /api/rating/:id           # Update rating
+DELETE /api/rating/:id           # Delete rating
+GET    /api/rating/my-rating     # Get user's ratings
+```
+
+### Course Endpoints
+
+```http
+GET    /api/courses              # Get all courses (public)
+GET    /api/courses/:id          # Get specific course (public)
+POST   /api/courses              # Create course (admin only)
+PATCH  /api/courses/:id          # Update course (admin only)
+DELETE /api/courses/:id          # Delete course (admin only)
 ```
 
 ### Request Examples
@@ -204,6 +284,12 @@ curl -X POST http://localhost:3000/api/auth/refresh \
 ### Rate Limiting
 - **Global**: 100 requests per 15 minutes
 - **Auth**: 20 requests per 15 minutes
+- **Resumes**: Plan-based daily limits
+
+### File Upload Limits
+- **Images**: JPEG, PNG, JPG, WEBP (max 5MB)
+- **Documents**: PDF, DOC, DOCX (max 5MB)
+- **Storage**: Cloudinary with organized folders
 
 ### Security Features
 - **Helmet.js**: Security headers
@@ -217,34 +303,64 @@ curl -X POST http://localhost:3000/api/auth/refresh \
 ```
 src/
 ├── config/
-│   ├── env.ts           # Environment validation
-│   └── jwt.ts           # JWT configuration
+│   ├── env.ts              # Environment validation
+│   ├── jwt.ts              # JWT configuration
+│   ├── multer.ts           # File upload configuration
+│   └── passport.ts         # Passport strategies
+├── constants/
+│   └── upload.ts           # Upload constants (limits, MIME types)
 ├── docs/
-│   ├── swagger.ts       # Swagger configuration
-│   └── auth.apis.ts     # API documentation
+│   ├── swagger.ts          # Swagger configuration
+│   ├── auth.apis.ts        # Auth API docs
+│   ├── profile.apis.ts     # Profile API docs
+│   ├── resume.apis.ts      # Resume API docs
+│   └── rating.apis.ts      # Rating API docs
 ├── middlewares/
-│   ├── error.middleware.ts    # Error handling
-│   ├── ratelimiter.ts         # Rate limiting
-│   └── validate.ts            # Input validation
-├── modules/auth/
-│   ├── models/
-│   │   ├── user.model.ts
-│   │   ├── account.model.ts
-│   │   └── forgetPassword.model.ts
-│   ├── strategies/
-│   │   ├── strategy.ts
-│   │   └── passport.strategy.ts
-│   ├── auth.controller.ts
-│   ├── auth.service.ts
-│   ├── auth.route.ts
-│   ├── auth.validation.ts
-│   └── auth.types.ts
+│   ├── error.middleware.ts # Error handling
+│   ├── protect.ts          # Auth protection (user/HR/admin)
+│   ├── ratelimiter.ts      # Rate limiting
+│   ├── validate.ts         # Input validation
+│   └── planLimits.middleware.ts # Plan-based upload limits
+├── modules/
+│   ├── auth/               # Authentication module
+│   │   ├── models/
+│   │   ├── strategies/
+│   │   ├── auth.controller.ts
+│   │   ├── auth.service.ts
+│   │   ├── auth.route.ts
+│   │   └── auth.validation.ts
+│   ├── profile/            # Profile module
+│   │   ├── profile.model.ts
+│   │   ├── profile.controller.ts
+│   │   ├── profile.service.ts
+│   │   ├── profile.route.ts
+│   │   └── profile.validation.ts
+│   ├── resume/             # Resume module
+│   │   ├── resume.model.ts
+│   │   ├── resume.controller.ts
+│   │   ├── resume.service.ts
+│   │   └── resume.route.ts
+│   ├── rating/             # Rating module
+│   │   ├── rating.model.ts
+│   │   ├── rating.controller.ts
+│   │   ├── rating.service.ts
+│   │   └── rating.route.ts
+│   ├── course/             # Course module
+│   │   ├── course.model.ts
+│   │   ├── course.controller.ts
+│   │   └── course.route.ts
+│   └── hr/                 # HR request module
+│       ├── hr.model.ts
+│       ├── hr.controller.ts
+│       └── hr.route.ts
 ├── services/
-│   └── email.ts         # Email service
+│   └── email.ts            # Email service
 ├── utils/
-│   └── ApiError.ts      # Custom error class
-├── app.ts               # Express app setup
-└── server.ts            # Server startup
+│   ├── ApiError.ts         # Custom error class
+│   ├── ApiFeatures.ts      # Query features (filter, sort, paginate)
+│   └── cloudinaryUpload.ts # Cloudinary utilities
+├── app.ts                  # Express app setup
+└── server.ts               # Server startup
 ```
 
 ## 🧪 Testing
@@ -274,19 +390,22 @@ FACEBOOK_CALLBACK_URL=https://your-api-domain.com/api/auth/facebook/callback
 
 ### Production Considerations
 - Use HTTPS in production
-- Set secure cookie flags
+- Set secure cookie flags (`secure: true`, `sameSite: 'none'`)
 - Configure proper CORS origins
 - Use environment-specific secrets
 - Enable logging and monitoring
 - Set up database backups
+- Configure Cloudinary for production
 
 ## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Make your changes
 4. Add tests if applicable
-5. Submit a pull request
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Submit a pull request
 
 ## 📝 License
 
@@ -303,10 +422,12 @@ For support and questions:
 
 - Always use HTTPS in production
 - Keep environment variables secure
+- Never commit `.env` files
 - Regularly update dependencies
 - Monitor security advisories
 - Use strong secrets for JWT and OAuth
 - Implement proper logging and monitoring
+- Validate all file uploads strictly
 
 ## 📊 Monitoring
 
@@ -321,4 +442,4 @@ For support and questions:
 
 ---
 
-**Built with ❤️ for secure authentication**
+**Built with ❤️ for connecting talent with opportunity**

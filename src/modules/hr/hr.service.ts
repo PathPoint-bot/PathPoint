@@ -87,7 +87,10 @@ export const getAllHrRequests = async (req: Request) => {
 
 
 
-
-
-
-
+export const getAllHrs = async (req: Request) => {
+    let query = HRRequest.find();
+    let features = new ApiFeatures(query, req.query);
+    features = features.filter().sort().limit().pagination();
+    const hrRequests = await features.query;
+    return hrRequests;
+}

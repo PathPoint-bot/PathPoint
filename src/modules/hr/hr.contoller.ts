@@ -51,3 +51,12 @@ export const getAllHrRequests = async (req: Request, res: Response, next: NextFu
         next(error);
     }
 }
+
+export const getAllHrs = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const hrs = await hrService.getAllHrs(req);
+        res.status(200).json({ success: true, data: hrs });
+    } catch (error) {
+        next(error);
+    }
+}

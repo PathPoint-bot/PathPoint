@@ -390,6 +390,14 @@ const options = {
         {
           name: 'Authentication',
           description: 'User authentication and authorization endpoints'
+        },
+        {
+          name: 'Payments',
+          description: 'Payment processing with Paymob integration'
+        },
+        {
+          name: 'HR',
+          description: 'HR profiles and booking endpoints'
         }
       ]
     }

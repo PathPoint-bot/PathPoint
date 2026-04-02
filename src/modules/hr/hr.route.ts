@@ -11,10 +11,7 @@ router.use(protectUser)
 router.get("/", hrController.getHRRequest)
 router.post("/", hrController.createHRRequest)
 router.delete("/", hrController.deleteHRRequest)
-
-// HR routes
-router.use(protectHr)
-
+router.get("/all", hrController.getAllHrs)
 // Admin routes
 router.use(protectAdmin)
 
