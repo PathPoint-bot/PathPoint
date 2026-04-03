@@ -185,7 +185,6 @@ export const initiatePlanUpgradePayment = async (
     const planAmounts: Record<string, number> = {
         basic: PAYMENT_AMOUNTS.PLAN_BASIC,
         pro: PAYMENT_AMOUNTS.PLAN_PRO,
-        enterprise: PAYMENT_AMOUNTS.PLAN_ENTERPRISE,
     };
     const amount = planAmounts[plan] || PAYMENT_AMOUNTS.PLAN_BASIC;
     

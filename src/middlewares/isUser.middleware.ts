@@ -9,7 +9,6 @@ import User from "../modules/auth/models/user.model.js";
 export const isUser = async (req: Request, res: Response, next: NextFunction) => {
     let header = req.headers.authorization;
     if (!header) {
-        console.log(req.path)
         return next(ApiError.unauthorized("Unauthorized"));
     }
     let token = header.split(" ")[1];

@@ -75,7 +75,6 @@
  *       Amounts are fixed based on plan (from constants):
  *       - basic: 200 EGP
  *       - pro: 500 EGP
- *       - enterprise: 1000 EGP
  *     tags: [Payments]
  *     security:
  *       - bearerAuth: []
@@ -89,7 +88,7 @@
  *             properties:
  *               plan:
  *                 type: string
- *                 enum: [basic, pro, enterprise]
+ *                 enum: [basic, pro]
  *                 example: "pro"
  *                 description: Plan tier to upgrade to
  *               currency:

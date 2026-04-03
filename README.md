@@ -32,10 +32,18 @@ A comprehensive career platform API built with Node.js, Express, TypeScript, and
 - **Update & Delete Ratings** - Modify or remove existing ratings
 - **View Own Ratings** - Users can see their rating history
 
-### � Payment Integration
+### 📧 Email Notifications
+- **HTML Email Templates** - Professional responsive email designs
+- **Welcome Emails** - Sent on user registration/login
+- **Password Reset** - Verification code emails for password recovery
+- **Payment Confirmation** - Transaction details after successful payment
+- **HR Reservation** - Booking confirmation emails for HR sessions
+- **Text-based Logo** - PathPoint branding in all emails
+
+### 💳 Payment Integration
 - **Paymob Integration** - Secure payment processing with Paymob
 - **HR Booking Payments** - Fixed 100 EGP for booking HR sessions
-- **Plan Upgrade Payments** - Tiered pricing (Basic: 200 EGP, Pro: 500 EGP, Enterprise: 1000 EGP)
+- **Plan Upgrade Payments** - Tiered pricing (Basic: 200 EGP, Pro: 500 EGP)
 - **HMAC Validation** - Secure callback verification
 - **Automatic Actions** - Upgrade user roles on successful payment
 - **Payment Logging** - Complete transaction history in database
@@ -270,7 +278,6 @@ POST   /api/payments/callback        # Paymob callback (POST)
 - HR Booking: 100 EGP
 - Plan Basic: 200 EGP
 - Plan Pro: 500 EGP
-- Plan Enterprise: 1000 EGP
 
 ### Course Endpoints
 
@@ -403,7 +410,12 @@ src/
 │       ├── payment.route.ts
 │       └── payment.validation.ts
 ├── services/
-│   └── email.ts            # Email service
+│   └── email.ts            # Email service (Nodemailer)
+├── templates/              # HTML email templates
+│   ├── welcome.html        # Welcome email
+│   ├── reset-password.html # Password reset email
+│   ├── payment-confirmation.html # Payment success email
+│   └── hr-reservation.html # HR booking confirmation email
 ├── utils/
 │   ├── ApiError.ts         # Custom error class
 │   ├── ApiFeatures.ts      # Query features (filter, sort, paginate)

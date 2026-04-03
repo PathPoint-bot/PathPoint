@@ -98,6 +98,9 @@ export const getAllHrs = async (req: Request) => {
 
 export const createHrBooking = async (userId: string, hrId: string) => {
     const check = await HRBooking.findOne({ userId, hrId });
+    if (userId === hrId) {
+        throw ApiError.badRequest("You cannot book yourself");
+    }
     if (check) {
         throw ApiError.badRequest("HR booking already exists");
     }
@@ -106,6 +109,6 @@ export const createHrBooking = async (userId: string, hrId: string) => {
 
 
 export const getHrBookings = async (userId: string) => {
-    const hrBookings = await HRBooking.find({ hr: userId });
+    const hrBookings = await HRBooking.find({ hrId: userId });
     return hrBookings;
 }

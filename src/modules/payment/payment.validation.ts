@@ -20,9 +20,9 @@ export const hrBookingPaymentValidation = Joi.object({
 // Plan Upgrade payment
 export const planUpgradePaymentValidation = Joi.object({
     ...basePaymentValidation,
-    plan: Joi.string().valid("basic", "pro", "enterprise").required().messages({
+    plan: Joi.string().valid("basic", "pro").required().messages({
         "any.required": "Plan is required",
-        "any.only": "Plan must be basic, pro, or enterprise",
+        "any.only": "Plan must be basic or pro",
     }),
 });
 
