@@ -7,6 +7,8 @@ import { PaymentLog } from "./payment.model.js";
 import { PAYMENT_AMOUNTS, PAYMENT_CURRENCY } from "../../constants/payment.js";
 import {upgradeUserPlan} from "../auth/auth.service.js";
 import {createHrBooking} from "../hr/hr.service.js";
+import User from "../auth/models/user.model.js";
+import { sendPaymentConfirmationEmail, sendHRReservationEmail } from "./payment.email.js";
 let cacheToken: string | null = null;
 
 // HMAC Validation for Paymob callback (handles query params format)
@@ -247,8 +249,33 @@ export const paymentCallBack = async (data: any, hmac: string): Promise<{ succes
         // Execute service-specific action based on stored metadata
         if (originalMetadata?.service === "hr-booking") {
             await createHrBooking(originalMetadata?.hrId, originalMetadata?.userId);
+            // Send HR reservation email
+            const user = await User.findById(updatedLog.userId);
+            if (user) {
+                await sendHRReservationEmail(
+                    user.name,
+                    user.email,
+                    "HR Mentor",
+                    "TBD",
+                    "TBD"
+                );
+            }
         } else if (originalMetadata?.service === "plan-upgrade") {
             await upgradeUserPlan(updatedLog.userId, originalMetadata?.plan);
+            // Send payment confirmation email for plan upgrade
+            const user = await User.findById(updatedLog.userId);
+            if (user) {
+                const amount = (updatedLog.amount / 100).toFixed(2); // Convert from cents
+                await sendPaymentConfirmationEmail(
+                    user.name,
+                    user.email,
+                    data.id || updatedLog.transactionId || "N/A",
+                    `Plan Upgrade - ${originalMetadata?.plan || "Basic"}`,
+                    amount,
+                    updatedLog.currency || "EGP",
+                    new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })
+                );
+            }
         }
         return { success: true, message: "Payment processed successfully" };
     } else {

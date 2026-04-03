@@ -15,7 +15,6 @@ async function sendWelcomeEmail(username: string, userEmail: string) {
         
         // Replace placeholders
         htmlTemplate = htmlTemplate.replace("{{username}}", username);
-        htmlTemplate = htmlTemplate.replace("{{appUrl}}", env.client.url);
         
         // Initialize email service
         const emailService = new EmailService(env.email.user, env.email.pass);
@@ -23,7 +22,7 @@ async function sendWelcomeEmail(username: string, userEmail: string) {
         // Send welcome email
         await emailService.sendEmail(
             userEmail,
-            "مرحباً بك في PathPoint! ",
+            "Welcome to PathPoint AI! 🚀",
             htmlTemplate
         );
         
@@ -44,8 +43,6 @@ async function sendResetPasswordEmail(username: string, userEmail: string, verif
         // Replace placeholders
         htmlTemplate = htmlTemplate.replace("{{username}}", username);
         htmlTemplate = htmlTemplate.replace("{{verificationCode}}", verificationCode);
-        htmlTemplate = htmlTemplate.replace("{{supportUrl}}", `${env.client.url}/support`);
-        htmlTemplate = htmlTemplate.replace("{{helpUrl}}", `${env.client.url}/help`);
         
         // Initialize email service
         console.log(env.email.user)

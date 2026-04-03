@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Payment Receipt - PathPoint AI</title>
+    <style>
+      .btn:hover {
+        background-color: #003580 !important;
+      }
+      @media only screen and (max-width: 600px) {
+        .container { width: 100% !important; }
+        .padding-mobile { padding-left: 20px !important; padding-right: 20px !important; }
+        .btn {
+          display: block !important;
+          width: 100% !important;
+          box-sizing: border-box;
+        }
+        h1 { font-size: 22px !important; }
+      }
+    </style>
+  </head>
+  <body style="margin: 0; padding: 0; background: #f4f7f9; font-family: Arial, sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center" style="padding: 20px 10px">
+          <table class="container" width="600" cellpadding="0" cellspacing="0" style="width: 100%; max-width: 600px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
+            <tr>
+              <td align="center" style="padding: 25px 20px 10px; border-bottom: 1px solid #f1f5f9;">
+                <div style="font-size: 32px; font-weight: bold; color: #0047ab; padding: 20px;">🚀 PathPoint AI</div>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding: 30px 20px 10px">
+                <div style="background: #ecfdf5; width: 64px; height: 64px; border-radius: 50%; line-height: 64px; margin-bottom: 15px; display: inline-block;">
+                  <span style="font-size: 32px; color: #10b981;">✅</span>
+                </div>
+                <h1 style="margin: 0; font-size: 26px; color: #1e293b;">Payment Received!</h1>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" class="padding-mobile" style="padding: 0 40px 10px">
+                <p style="margin: 0; font-size: 15px; color: #475569; line-height: 1.6;">
+                  Thank you for your trust in <strong>PathPoint AI</strong>. Your payment is confirmed, and your service details are listed below.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td class="padding-mobile" style="padding: 20px 40px 10px">
+                <table width="100%" cellpadding="0" cellspacing="0" style="background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 12px;">
+                  <tr>
+                    <td style="padding: 25px; text-align: center;">
+                      <p style="margin: 0 0 8px; color: #64748b; font-size: 12px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Transaction ID</p>
+                      <code style="font-family: 'Courier New', Courier, monospace; font-size: 20px; color: #0047ab; font-weight: bold; background: #e0f2fe; padding: 5px 12px; border-radius: 4px;">{{transactionId}}</code>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td class="padding-mobile" style="padding: 10px 40px 20px">
+                <table width="100%" cellpadding="0" cellspacing="0" style="border: 1px solid #e2e8f0; border-radius: 10px;">
+                  <tr>
+                    <td style="padding: 20px;">
+                      <table width="100%" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td style="color: #64748b; font-size: 14px; padding-bottom: 12px;">Service:</td>
+                          <td align="right" style="color: #1e293b; font-size: 14px; font-weight: bold; padding-bottom: 12px;">{{serviceName}}</td>
+                        </tr>
+                        <tr>
+                          <td style="color: #64748b; font-size: 14px; padding-bottom: 12px;">Amount Paid:</td>
+                          <td align="right" style="color: #1e293b; font-size: 14px; font-weight: bold; padding-bottom: 12px;">{{amount}} {{currency}}</td>
+                        </tr>
+                        <tr>
+                          <td style="color: #64748b; font-size: 14px;">Date:</td>
+                          <td align="right" style="color: #1e293b; font-size: 14px; font-weight: bold;">{{paymentDate}}</td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding: 15px; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0;">
+                <p style="margin: 0">PathPoint AI Billing Team</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
