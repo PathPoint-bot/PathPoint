@@ -9,7 +9,6 @@ import {upgradeUserPlan} from "../auth/auth.service.js";
 import {createHrBooking} from "../hr/hr.service.js";
 import User from "../auth/models/user.model.js";
 import { sendPaymentConfirmationEmail, sendHRReservationEmail } from "./payment.email.js";
-let cacheToken: string | null = null;
 
 // HMAC Validation for Paymob callback (handles query params format)
 export const validatePaymobHmac = (data: any, receivedHmac: string): boolean => {
@@ -63,18 +62,18 @@ const getAuthToken = async() => {
         api_key: env.payment.paymobApiKey
     });
     
-    cacheToken = response.data.token;
     return response.data.token;
 }
 
 
 
-const createPayment = async(amount: number, currency: string = "EGP" , user : ITokenPayload, service: string, retry : boolean = true) => {
+const createPayment = async(amount: number, currency: string = "EGP" , user : ITokenPayload, service: string) => {
     try {
+        const authToken = await getAuthToken();
         const response = await axios.post(
             `${env.payment.paymobUrl}/api/ecommerce/orders`,
             {
-                auth_token: cacheToken,
+                auth_token: authToken,
                 amount_cents: amount,
                 currency: currency,
                 delivery_needed: "false",
@@ -86,10 +85,6 @@ const createPayment = async(amount: number, currency: string = "EGP" , user : IT
         );
         return response.data;
     } catch (err: any) {
-        if (err.response?.status === 401 && retry) {
-            await getAuthToken();
-            return createPayment(amount, currency, user, service, false);
-        }
         throw err;
     }
 };
@@ -100,14 +95,14 @@ const createPaymentKey = async (
     paymobOrderId: string,  
     amount: number,      
     user: { name: string; email: string },
-    currency: string = "EGP",
-    retry: boolean = true
+    currency: string = "EGP"
 ): Promise<string> => {
     try {
+        const authToken = await getAuthToken();
         const response = await axios.post(
             `${env.payment.paymobUrl}/api/acceptance/payment_keys`,
             {
-                auth_token: cacheToken,
+                auth_token: authToken,
                 amount_cents: amount,
                 expiration: 3600,
                 order_id: paymobOrderId,
@@ -133,14 +128,9 @@ const createPaymentKey = async (
 
         return response.data.token;
     } catch (err: any) {
-        if (err.response?.status === 401 && retry) {
-            await getAuthToken();
-            return createPaymentKey(paymobOrderId, amount, user, currency, false);
-        }
         throw err;
     }
 };
-
 
 
 
@@ -215,7 +205,6 @@ export const initiatePlanUpgradePayment = async (
 
 export const paymentCallBack = async (data: any, hmac: string): Promise<{ success: boolean; message: string }> => {
     // Validate HMAC
-    console.log(data)
     const isValid = validatePaymobHmac(data, hmac);
     
     if (!isValid) {
