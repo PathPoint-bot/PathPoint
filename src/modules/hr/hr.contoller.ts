@@ -70,3 +70,21 @@ export const getHrBookings = async (req: Request, res: Response, next: NextFunct
         next(error);
     }
 }
+
+export const updateHrBookingStatus = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const hrBooking = await hrService.updateHrBookingStatus(req.params.id as string, req.body.status, req.user!.userId);
+        res.status(200).json({ success: true, data: hrBooking });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const createHrBooking = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const hrBooking = await hrService.createHrBooking(req.user!.userId, req.body);
+        res.status(200).json({ success: true, data: hrBooking });
+    } catch (error) {
+        next(error);
+    }
+}

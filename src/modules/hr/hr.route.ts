@@ -11,8 +11,11 @@ router.get("/all", hrController.getAllHrs)
 router.get("/", hrController.getHRRequest)
 router.post("/", hrController.createHRRequest)
 router.delete("/", hrController.deleteHRRequest)
+router.post("/book", hrController.createHrBooking)
 
+// HR routes
 router.use(protectHr)
+router.put("/book", hrController.updateHrBookingStatus)
 router.get("/bookings", hrController.getHrBookings)
 // Admin routes
 router.use(protectAdmin)

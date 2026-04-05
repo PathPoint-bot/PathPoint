@@ -112,3 +112,13 @@ export const getHrBookings = async (userId: string) => {
     const hrBookings = await HRBooking.find({ hrId: userId });
     return hrBookings;
 }
+
+export const updateHrBookingStatus = async (bookingId: string, status: "pending" | "approved" , userId: string) => {
+    const booking = await HRBooking.findOne({ _id: bookingId, hrId: userId });
+    if (!booking) {
+        throw ApiError.notFound("HR booking not found");
+    }
+    booking.status = status;
+    await booking.save();
+    return booking;
+}
