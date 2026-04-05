@@ -265,6 +265,20 @@ DELETE /api/rating/:id           # Delete rating
 GET    /api/rating/my-rating     # Get user's ratings
 ```
 
+### HR Endpoints
+
+```http
+GET    /api/hr/all              # Get all HR profiles (public)
+GET    /api/hr/                 # Get HR request (HR role)
+POST   /api/hr/                 # Create HR request
+DELETE /api/hr/                 # Delete HR request
+POST   /api/hr/book             # Create HR booking (user)
+PUT    /api/hr/book             # Update booking status (HR role)
+GET    /api/hr/bookings         # Get HR bookings (HR role)
+PUT    /api/hr/:id              # Update HR request (admin)
+GET    /api/hr/allRequest       # Get all HR requests (admin)
+```
+
 ### Payment Endpoints
 
 ```http
