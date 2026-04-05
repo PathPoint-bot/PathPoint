@@ -37,7 +37,7 @@ const userSchema = new Schema<IUser>({
     },
     status:{
         type:String,
-        enum:["completed" , "active"],
+        enum:["pending", "completed" , "active"],
         default:"pending"
     },
     plan:{
