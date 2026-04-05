@@ -23,4 +23,4 @@ router.use(protectAdmin)
 router.put("/:id", validate(updateHRRequestValidation), hrController.updateHRRequest)
 router.get("/allRequest", hrController.getAllHrRequests)
 
-export default router;
+export default router;      
