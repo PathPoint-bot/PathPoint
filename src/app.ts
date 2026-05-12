@@ -1,6 +1,5 @@
 import express  from "express"
 import type {Request, Response, NextFunction} from "express"
-import helmet from 'helmet';
 import cors from "cors"
 import hpp from "hpp"
 import compression from "compression"
@@ -24,7 +23,6 @@ app.use(express.urlencoded({ extended: true, limit: "10kb" }));
 
 
 // ── Security ─────────────────────────────────────────────────────
-app.use(helmet())
 app.use((req, res, next) => {
   const sanitize = (obj : Record<string,any>) => {
     if (obj && typeof obj === "object") {
