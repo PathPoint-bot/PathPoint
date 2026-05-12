@@ -72,6 +72,10 @@
 
     "jsx": "react-jsx",
 
+    "esModuleInterop": true,
+
+    "allowSyntheticDefaultImports": true,
+
     "verbatimModuleSyntax": true,
 
     "isolatedModules": true,
