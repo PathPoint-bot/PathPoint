@@ -96,6 +96,7 @@ app.use("/api/auth", authLimiter, authRouter);
 
 // Middleware
 import { isUser } from "./middlewares/isUser.middleware.js";
+
 app.use(isUser);
 
 

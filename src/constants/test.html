@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VAST Test Fixed</title>
+
+  <link href="https://vjs.zencdn.net/7.20.3/video-js.css" rel="stylesheet" />
+
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      background: #111;
+      color: #fff;
+      font-family: Arial;
+      text-align: center;
+    }
+    .wrapper {
+      max-width: 900px;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>VAST Test (Clean Version)</h1>
+
+    <video id="my-video" class="video-js vjs-default-skin" controls width="800" height="450">
+      <source src="https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+    </video>
+
+    <p>افتح الـ Console وشوف نتيجة VAST</p>
+  </div>
+
+  <script src="https://vjs.zencdn.net/7.20.3/video.min.js"></script>
+
+  <script>
+    const VAST_URL = "https://s.magsrv.com/v1/vast.php?idzone=5910372";
+
+    const player = videojs('my-video');
+
+    async function checkVAST() {
+      try {
+        const res = await fetch(VAST_URL);
+        const text = await res.text();
+
+        console.log("===== VAST RESPONSE =====");
+        console.log(text);
+
+        if (text && text.includes("VAST")) {
+          console.log("✔ VAST شغال وفيه بيانات");
+        } else {
+          console.log("❌ مفيش إعلان راجع أو الزون فاضي");
+        }
+      } catch (err) {
+        console.error("VAST Error:", err);
+      }
+    }
+
+    player.ready(function () {
+      console.log("Player ready");
+      checkVAST();
+
+      player.on('play', function () {
+        console.log("User started video");
+      });
+    });
+  </script>
+
+</body>
+</html>

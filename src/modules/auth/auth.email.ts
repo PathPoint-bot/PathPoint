@@ -45,8 +45,6 @@ async function sendResetPasswordEmail(username: string, userEmail: string, verif
         htmlTemplate = htmlTemplate.replace("{{verificationCode}}", verificationCode);
         
         // Initialize email service
-        console.log(env.email.user)
-        console.log(env.email.pass)
         const emailService = new EmailService(env.email.user, env.email.pass);
         
         // Send reset password email

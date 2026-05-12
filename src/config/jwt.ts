@@ -10,3 +10,4 @@ export const refreshTokenConfig = {
     secret: (env.jwt.refreshTokenSecret || 'default-refresh-secret') as string,
     expiresIn: "7d" as NonNullable<SignOptions["expiresIn"]> // Skip typescript validation
 }
+

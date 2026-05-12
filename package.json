@@ -17,6 +17,7 @@
     "@types/cookie-parser": "^1.4.10",
     "@types/express-session": "^1.18.2",
     "@types/passport-facebook": "^3.0.4",
+    "axios": "^1.16.0",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.9.0",
     "compression": "^1.8.1",
