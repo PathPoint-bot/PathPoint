@@ -14,8 +14,8 @@ import { swaggerUi, specs } from "./docs/swagger.js"
 
 const app = express()
 
-
-
+// Trust proxy for Vercel/deployment environments
+app.set('trust proxy', true)
 
 // ── Body Parsing ──────────────────────────────────────
 app.use(express.json({ limit: "10kb" })); // Prevent large payload attacks
